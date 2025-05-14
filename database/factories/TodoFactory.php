@@ -2,20 +2,26 @@
 
 namespace Database\Factories;
 
-use App\Models\Todo;
-use App\Models\User;
+use App\Models\Category;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
+/**
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Todo>
+ */
 class TodoFactory extends Factory
 {
-    protected $model = Todo::class;
-
-    public function definition()
+    /**
+     * Define the model's default state.
+     *
+     * @return array<string, mixed>
+     */
+    public function definition(): array
     {
         return [
-            'title' => $this->faker->sentence,
-            'user_id' => User::inRandomOrder()->first()->id ?? User::factory()->create()->id,
-            'is_done' => $this->faker->boolean,
+            'user_id' => rand(1, 100),
+            'title' => ucwords($this->faker->sentence()),
+            'is_done' => rand(0, 1),
+            'category_id' => Category::inRandomOrder()->first()?->id ?? Category::factory(), //realsi
         ];
     }
 }

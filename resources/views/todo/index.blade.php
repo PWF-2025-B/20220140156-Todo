@@ -8,13 +8,14 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
-            {{-- Session Alerts --}}
+            {{-- Create Button & Session Alerts --}}
             <div class="overflow-hidden bg-white shadow-sm dark:bg-gray-800 sm:rounded-lg mb-6">
                 <div class="p-6 text-xl text-gray-900 dark:text-gray-100">
                     <div class="flex items-center justify-between">
                         <div>
-                        <span>{{ __('Todo') }}</span>
-                           
+                            <a href="{{ route('todo.create') }}" class="px-4 py-2 bg-blue-600 text-black rounded hover:bg-blue-700">
+                                Create
+                            </a>
                         </div>
 
                         @if (session('success'))
@@ -38,9 +39,8 @@
 
             {{-- Header Card --}}
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg mb-6">
-                <div class="p-6 text-gray-900 dark:text-gray-100 flex justify-between items-center">
-                    <a href="{{ route('todo.create') }}" class="text-sm text-blue-600 dark:text-blue-400 hover:underline">Create</a>
-                   
+                <div class="p-6 text-gray-900 dark:text-gray-100">
+                    {{ __('Index Todo Page') }}
                 </div>
             </div>
 
@@ -51,6 +51,7 @@
                         <thead class="text-sm text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
                                 <th scope="col" class="px-6 py-3">Title</th>
+                                <th scope="col" class="px-6 py-3">Category</th>
                                 <th scope="col" class="px-6 py-3">Status</th>
                                 <th scope="col" class="px-6 py-3">Action</th>
                             </tr>
@@ -62,6 +63,9 @@
                                         <a href="{{ route('todo.edit', $data) }}" class="hover:underline text-xs">
                                             {{ $data->title }}
                                         </a>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        {{ $data->category->name ?? '-' }}
                                     </td>
                                     <td class="px-6 py-4">
                                         @if (!$data->is_done)
@@ -106,7 +110,7 @@
                                 </tr>
                             @empty
                                 <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-                                    <td colspan="3" class="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
+                                    <td colspan="4" class="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
                                         No data available
                                     </td>
                                 </tr>
@@ -121,9 +125,9 @@
                         <form action="{{ route('todo.deleteallcompleted') }}" method="POST">
                             @csrf
                             @method('DELETE')
-                            <x-primary-button>
+                            <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
                                 Delete All Completed Task
-                            </x-primary-button>
+                            </button>
                         </form>
                     </div>
                 @endif
