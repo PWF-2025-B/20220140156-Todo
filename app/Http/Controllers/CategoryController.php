@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-   1 public function index()
+   public function index()
        {
      $categories = Category::withcount('todos')->where('user_id', Auth::id())->get();
      return view('category.index', compact('categories'));
