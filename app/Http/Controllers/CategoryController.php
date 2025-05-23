@@ -7,13 +7,11 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    public function index()
-    {
-        // Ambil semua kategori dengan jumlah Todo yang terkait
-        $categories = Category::withCount('todos')->get();
-
-        return view('category.index', compact('categories'));
-    }
+   1 public function index()
+       {
+     $categories = Category::withcount('todos')->where('user_id', Auth::id())->get();
+     return view('category.index', compact('categories'));
+       }
 
     public function create()
     {

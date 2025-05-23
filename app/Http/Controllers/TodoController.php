@@ -9,23 +9,20 @@ use Illuminate\Support\Facades\Auth;
 
 class TodoController extends Controller
 {
-    public function index()
-    {
-        // Memastikan pengguna sudah login
-        if (!Auth::check()) {
-            return redirect()->route('login')->with('error', 'Please login to view your tasks.');
-        }
+   public function index()
+{
+    $todos = Todo::with('category')
+        ->where('user_id', Auth::id())
+        ->orderBy('is_done', 'asc')
+        ->orderBy('created_at', 'desc')
+        ->paginate(10);
 
-        // Mengambil todos berdasarkan user yang sedang login
-        $todos = Todo::where('user_id', Auth::user()->id)->orderBy('created_at', 'desc')->get();
-        
-        // Menghitung jumlah todos yang sudah selesai
-        $todosCompleted = Todo::where('user_id', Auth::user()->id)
-            ->where('is_done', true)
-            ->count();  
+    $todosCompleted = Todo::where('user_id', Auth::id())
+        ->where('is_done', true)
+        ->count();
 
-        return view('todo.index', compact('todos', 'todosCompleted'));
-    }
+    return view('todo.index', compact('todos', 'todosCompleted'));
+}
 
    public function create()
 {
