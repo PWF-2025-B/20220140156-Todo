@@ -6,11 +6,12 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable implements MustVerifyEmail, JWTSubject
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -34,7 +35,7 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * The attributes that should be cast.
      *
      * @return array<string, string>
      */
@@ -46,8 +47,29 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
 
+    /**
+     * Relationship dengan model Todo.
+     */
     public function todos()
     {
         return $this->hasMany(Todo::class);
+    }
+
+    /**
+     * Implementasi JWTSubject: ambil ID pengguna untuk JWT.
+     */
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    /**
+     * Implementasi JWTSubject: tambahkan custom claims ke JWT.
+     */
+    public function getJWTCustomClaims(): array
+    {
+        return [
+            'isAdmin' => $this->is_Admin,
+        ];
     }
 }
