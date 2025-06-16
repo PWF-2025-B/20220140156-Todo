@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use App\Models\Todo;
-use App\Models\Category;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -16,23 +15,33 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        
-        User::factory()->create([
-            'name' => 'Admin',
-            'email' => 'admin@admin.com',
+        // Membuat satu user khusus
+        $users = User::firstOrCreate([
+            'id' => 1,
+        ],[
+            'name' => 'Nico',
+            'email' => 'nicodwirahman22@gmail.com',
             'email_verified_at' => now(),
-            'password' => Hash::make('password'),
+            'password' => Hash::make('Rrqhoshi1'),
             'remember_token' => Str::random(10),
-            'is_admin' => true,
+                //'is_admin' => true
         ]);
 
-     
-        User::factory(100)->create();
+        
+        User::factory(101)->create();
 
-       
-        Category::factory(5)->create();
+        $defaultTitles = ['Category 1', 'Category 2', 'Category 3'];
+        foreach (\App\Models\User::all() as $user) {
+            foreach ($defaultTitles as $title) {
+                \App\Models\Category::create([
+                    'title' => $title,
+                    'user_id' => $user->id,
+                ]);
+            }
+        }
 
-       
-        Todo::factory(200)->create();
+        Todo::factory(500)->create([
+            'user_id' => $users -> id
+        ]);
     }
 }
